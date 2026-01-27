@@ -1,0 +1,13 @@
+{
+  "name": "mc-site",
+  "version": "1.0.0",
+  "description": "Minecraft Sunucu Listesi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^4.22.1"
+  }
+}

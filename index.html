@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MC SERVER LIST | Global Minecraft Servers</title>
+
+<meta name="description" content="Discover the best Minecraft servers. Vote, favorite and explore Survival, Skyblock, Factions, Minigames and more.">
+<link rel="icon" href="https://img.icons8.com/color/48/minecraft-sword.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+:root { 
+--mc-green:#5ea82d; --mc-dirt:#4b3621; --bg:#080808;
+--survival:#2ecc71; --skyblock:#3498db; --anarchy:#e74c3c; --factions:#9b59b6;
+--creative:#f1c40f; --prison:#7f8c8d; --minigames:#e67e22; --hardcore:#1abc9c;
+--diamond:#b9f2ff; --gold:#f1c40f;
+}
+
+*{box-sizing:border-box;transition:.25s}
+body{margin:0;background:var(--bg);color:#fff;font-family:Montserrat,sans-serif}
+canvas#snow{position:fixed;top:0;left:0;pointer-events:none;z-index:1}
+
+/* --- MODAL VE TREND STİLLERİ --- */
+.modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.9); }
+.modal-content { background:#151515; margin:10% auto; padding:25px; border:4px solid var(--mc-green); width:90%; max-width:400px; border-radius:8px; text-align:center; box-shadow: 0 0 20px var(--mc-green); }
+.admin-input { width:100%; padding:12px; margin:10px 0; background:#000; border:2px solid #333; color:#fff; font-family: Montserrat; }
+.trend-tag { background: linear-gradient(45deg, #ff4e50, #f9d423); color:#000; padding:2px 8px; border-radius:4px; font-weight:900; font-size:10px; margin-left:10px; animation: glow 1s infinite alternate; }
+@keyframes glow { from {box-shadow: 0 0 5px #ff4e50;} to {box-shadow: 0 0 15px #f9d423;} }
+
+/* ŞEKİLLİ YAZI RENKLERİ */
+.mc-color-1 { color: #55ffff; text-shadow: 2px 2px #00aaaa; }
+.mc-color-2 { color: #ff55ff; text-shadow: 2px 2px #aa00aa; }
+
+/* TOP BAR */
+.top-bar{position:absolute;top:15px;width:100%;display:flex;justify-content:space-between;padding:0 20px;z-index:1001}
+.flags{display:flex;gap:8px;font-size:20px}
+.nav-tools{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.btn-sm{background:rgba(0,0,0,.8);border:2px solid var(--mc-green);color:#fff;padding:8px 12px;cursor:pointer;font-size:10px;font-weight:900;border-radius:4px}
+.btn-sm:hover{filter:brightness(1.2)}
+
+/* HERO */
+.hero{
+height:380px;
+background:linear-gradient(rgba(0,0,0,.85),var(--bg)),url('tema.jpg') center/cover;
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+border-bottom:8px solid var(--mc-dirt)
+}
+.hero h1{
+font-family:'Press Start 2P',cursive;
+font-size:clamp(1.5rem,5vw,2.6rem);
+text-shadow:4px 4px 0 #000;
+margin-bottom:25px;
+animation:pop 1.2s ease-out
+}
+.hero h1:hover{text-shadow:0 0 10px var(--mc-green)}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+
+.search-box{
+width:90%;max-width:600px;padding:20px;background:#000;
+border:4px solid var(--mc-green);color:#fff;border-radius:8px;font-size:16px
+}
+
+/* FILTERS */
+.filter-bar{
+display:flex;gap:10px;padding:20px;background:#111;overflow-x:auto;
+justify-content:center;position:sticky;top:0;z-index:1000;border-bottom:4px solid #000
+}
+.f-btn{
+background:#222;border:2px solid #444;color:#fff;
+padding:10px 20px;cursor:pointer;font-weight:900;font-size:10px;text-transform:uppercase
+}
+.f-btn.active{border-color:#fff}
+
+/* SERVER CARDS */
+.container{max-width:1100px;margin:30px auto;padding:0 15px;position:relative;z-index:2}
+.card{
+background:rgba(20,20,20,.95);
+border:4px solid #333;
+display:grid;
+grid-template-columns:50px 80px 1fr 100px 140px 100px 40px; /* Bayrak için ekstra kolon */
+margin-bottom:15px;align-items:center;
+padding:0 0 0 20px;gap:15px;border-radius:6px;cursor:pointer;overflow:hidden;
+}
+.card:hover{border-color:var(--mc-green)}
+.card.premium-diamond{border-color:var(--diamond);box-shadow:0 0 15px var(--diamond)}
+.card.premium-gold{border-color:var(--gold);box-shadow:0 0 15px var(--gold)}
+
+.flag-icon { width: 32px; height: auto; border-radius: 2px; }
+.cat-tag{padding:3px 8px;border-radius:3px;font-size:10px;font-weight:900;color:#000;text-transform:uppercase}
+.player-count{font-size:28px;font-weight:900;color:#00ff41;text-align:center}
+
+/* SAĞDA BÜYÜK KOPYALA TUŞU */
+.big-copy-btn {
+    height: 100%; background: var(--mc-green); color: #fff; border: none;
+    font-weight: 900; cursor: pointer; font-size: 12px; border-left: 2px solid #000;
+}
+.big-copy-btn:hover { background: #fff; color: #000; }
+
+.fav-star{font-size:24px;cursor:pointer;color:#222;text-align:center}
+.fav-star.active{color:var(--gold)}
+
+@media(max-width:992px){
+.card{grid-template-columns: 1fr; padding: 20px; text-align: center;}
+.flag-icon { margin: 0 auto; }
+.big-copy-btn { padding: 15px; border: none; border-top: 2px solid #000; width: 100%;}
+}
+</style>
+</head>
+
+<body onkeydown="handleKeys(event)">
+
+<canvas id="snow"></canvas>
+<audio id="bgMusic" src="sarki.mp3" loop></audio>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 style="font-family:'Press Start 2P'; font-size:14px;">ADMIN LOGIN</h2>
+        <input type="password" id="passInput" class="admin-input" placeholder="Password">
+        <button class="btn-sm" onclick="tryLogin()">GİRİŞ</button>
+        <button class="btn-sm" onclick="closeModals()" style="border-color:red">KAPAT</button>
+    </div>
+</div>
+
+<div id="adminPanel" class="modal">
+    <div class="modal-content">
+        <h2>SERVER EKLE</h2>
+        <input id="addName" class="admin-input" placeholder="Server Name (Örn: <span class='mc-color-1'>Server</span>)">
+        <input id="addIp" class="admin-input" placeholder="Server IP">
+        <select id="addCat" class="admin-input">
+            <option>Survival</option><option>Skyblock</option><option>Minigames</option><option>Anarchy</option>
+        </select>
+        <select id="addFlag" class="admin-input">
+            <option value="tr">Turkey (TR)</option>
+            <option value="us">USA (US)</option>
+            <option value="de">Germany (DE)</option>
+            <option value="fr">France (FR)</option>
+        </select>
+        <label style="font-size:12px"><input type="checkbox" id="addTrend"> TREND OLSUN MU?</label><br><br>
+        <button class="btn-sm" onclick="addNewServer()">SİSTEME EKLE</button>
+        <button class="btn-sm" onclick="closeModals()">KAPAT</button>
+    </div>
+</div>
+
+<div class="top-bar">
+<div class="flags">🇹🇷 🇩🇪 🇫🇷 🇺🇸 🇪🇸 🇧🇷 🇷🇺 🇬🇧 🇮🇹 🇯🇵</div>
+<div class="nav-tools">
+<button class="btn-sm" onclick="openLogin()">LOGIN / REGISTER</button>
+<button class="btn-sm" id="mBtn" onclick="toggleMusic()">🎵 MUSIC: OFF</button>
+<input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)">
+<button class="btn-sm" onclick="toggleSnow()">❄️ SNOW</button>
+<button class="btn-sm" onclick="toggleFavs()" id="favToggleBtn" style="background:var(--gold);color:#000">⭐ FAVS: OFF</button>
+</div>
+</div>
+
+<header class="hero">
+<h1>MC SERVER LIST</h1>
+<input id="search" class="search-box" placeholder="Search by name, IP or version..." onkeyup="render()">
+</header>
+
+<div class="filter-bar">
+<button class="f-btn active" onclick="setCat('All',this)">All</button>
+<button class="f-btn" style="color:var(--survival)" onclick="setCat('Survival',this)">Survival</button>
+<button class="f-btn" style="color:var(--skyblock)" onclick="setCat('Skyblock',this)">Skyblock</button>
+<button class="f-btn" style="color:var(--anarchy)" onclick="setCat('Anarchy',this)">Anarchy</button>
+<button class="f-btn" style="color:var(--factions)" onclick="setCat('Factions',this)">Factions</button>
+<button class="f-btn" style="color:var(--creative)" onclick="setCat('Creative',this)">Creative</button>
+<button class="f-btn" style="color:var(--prison)" onclick="setCat('Prison',this)">Prison</button>
+<button class="f-btn" style="color:var(--minigames)" onclick="setCat('Minigames',this)">Minigames</button>
+<button class="f-btn" style="color:var(--hardcore)" onclick="setCat('Hardcore',this)">Hardcore</button>
+</div>
+
+<div class="container" id="grid"></div>
+
+<script>
+let servers = JSON.parse(localStorage.getItem('mc_v6_data')) || [
+{id:1,name:"<span class='mc-color-1'>Hypixel</span> Network",ip:"play.hypixel.net",cat:"Minigames",online:1000,type:"premium-diamond",web:"https://hypixel.net",likes:500,trend:true,flag:"us"},
+{id:2,name:"<span class='mc-color-2'>CraftRise</span>",ip:"play.craftrise.tc",cat:"Survival",online:800,type:"premium-gold",web:"#",likes:350,trend:false,flag:"tr"}
+];
+let favs = JSON.parse(localStorage.getItem('mc_favs')) || [];
+let currentCat="All",onlyFavs=false;
+
+function openLogin() { document.getElementById('loginModal').style.display='block'; }
+function closeModals() { document.getElementById('loginModal').style.display='none'; document.getElementById('adminPanel').style.display='none'; }
+function tryLogin() {
+    if(document.getElementById('passInput').value === "elif") {
+        document.getElementById('loginModal').style.display='none';
+        document.getElementById('adminPanel').style.display='block';
+    } else { alert("Hatalı Şifre!"); }
+}
+function addNewServer() {
+    const name = document.getElementById('addName').value;
+    const ip = document.getElementById('addIp').value;
+    const cat = document.getElementById('addCat').value;
+    const flag = document.getElementById('addFlag').value;
+    const trend = document.getElementById('addTrend').checked;
+    if(name && ip) {
+        servers.push({id:Date.now(), name, ip, cat, online:0, type:"", web:"#", likes:0, trend, flag});
+        localStorage.setItem('mc_v6_data', JSON.stringify(servers));
+        render(); closeModals();
+    }
+}
+
+function handleKeys(e){if(e.ctrlKey&&e.key==="m") openLogin();}
+
+function render(){
+const g=document.getElementById("grid");
+const t=document.getElementById("search").value.toLowerCase();
+
+let l=[...servers].sort((a,b) => (b.trend - a.trend) || (b.online - a.online));
+
+if(onlyFavs)l=l.filter(s=>favs.includes(s.id));
+if(currentCat!=="All")l=l.filter(s=>s.cat===currentCat);
+l=l.filter(s=>s.name.toLowerCase().includes(t)||s.ip.toLowerCase().includes(t));
+
+g.innerHTML=l.map(s=>`
+<div class="card ${s.type}">
+<img src="https://flagcdn.com/w80/${s.flag || 'tr'}.png" class="flag-icon">
+<img src="https://api.mcsrvstat.us/icon/${s.ip}" width="64" height="64" onerror="this.src='https://img.icons8.com/color/48/minecraft-logo.png'">
+<div>
+<span class="cat-tag" style="background:var(--${s.cat.toLowerCase()})">${s.cat}</span>
+${s.trend ? '<span class="trend-tag">TRENDING</span>' : ''}
+<h3>${s.name}</h3>
+<div style="font-size:11px; color:#666">${s.ip}</div>
+</div>
+<div class="player-count">${s.online}</div>
+<div>
+<button class="btn-sm">👍 ${s.likes}</button>
+<a class="btn-sm" href="${s.web}" target="_blank">WEB</a>
+</div>
+<button class="big-copy-btn" onclick="copyIP('${s.ip}',this)">KOPYALA</button>
+<div class="fav-star ${favs.includes(s.id)?'active':''}" onclick="toggleFav(${s.id})">★</div>
+</div>`).join("");
+}
+
+function copyIP(ip,btn){
+    navigator.clipboard.writeText(ip);
+    const old = btn.innerText; btn.innerText="KOPYALANDI!";
+    setTimeout(()=>btn.innerText=old, 1500);
+}
+
+function toggleFav(id){favs.includes(id)?favs=favs.filter(f=>f!==id):favs.push(id);localStorage.setItem("mc_favs",JSON.stringify(favs));render()}
+function toggleFavs(){onlyFavs=!onlyFavs;document.getElementById("favToggleBtn").innerText=`⭐ FAVS: ${onlyFavs?"ON":"OFF"}`;render()}
+function setCat(c,b){currentCat=c;document.querySelectorAll(".f-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()}
+function toggleMusic(){const m=document.getElementById("bgMusic");m.paused?m.play():m.pause();document.getElementById("mBtn").innerText=m.paused?"🎵 MUSIC: OFF":"⏸ MUSIC: ON"}
+function setVol(v){document.getElementById("bgMusic").volume=v}
+function toggleSnow(){const s=document.getElementById("snow");s.style.display=s.style.display==="none"?"block":"none"}
+
+const canvas=document.getElementById("snow"),ctx=canvas.getContext("2d");
+let parts=[];
+function initSnow(){canvas.width=innerWidth;canvas.height=innerHeight;parts=[];for(let i=0;i<80;i++)parts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*3+1,d:Math.random()})}
+function drawSnow(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle="white";ctx.beginPath();parts.forEach(p=>{ctx.moveTo(p.x,p.y);ctx.arc(p.x,p.y,p.r,0,Math.PI*2);p.y+=p.d+1;if(p.y>canvas.height)p.y=-10});ctx.fill();requestAnimationFrame(drawSnow)}
+
+window.onload=()=>{initSnow();drawSnow();render()}
+</script>
+
+</body>
+</html>
