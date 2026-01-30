@@ -1,289 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-<script defer src="https://analytics.vercel.app/script.js"></script>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MC SERVERS | THE BOSS ENGINE</title>
+
+    <!-- Vercel Analytics (HTML için doğru kullanım) -->
+    <script defer src="https://analytics.vercel.app/script.js" data-domain="SENIN-DOMAIN.vercel.app"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+
     <style>
-        :root { --mc-green: #5ea82d; --mc-dirt: #4b3621; --mc-stone: #313131; --neon: #00ff41; --bg: #0a0a0a; }
-        * { box-sizing: border-box; transition: 0.2s; }
-        body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --mc-green:#5ea82d; --mc-dirt:#4b3621; --mc-stone:#313131; --neon:#00ff41; --bg:#0a0a0a; }
+        * { box-sizing:border-box; transition:.2s; }
+        body { margin:0; background:var(--bg); color:#fff; font-family:'Montserrat',sans-serif; }
 
-        /* MUSIC PANEL */
-        .music-panel { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9); padding: 10px; border-radius: 30px; border: 2px solid var(--mc-green); z-index: 2000; box-shadow: 0 0 15px var(--mc-green); }
-        .m-btn { background: var(--mc-green); border: none; font-weight: 900; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 10px; color: #000; }
+        .music-panel{position:fixed;top:20px;right:20px;z-index:2000;background:#000;padding:10px;border-radius:30px;border:2px solid var(--mc-green)}
+        .m-btn{background:var(--mc-green);border:none;padding:6px 15px;font-size:10px;font-weight:900;cursor:pointer}
 
-        /* HERO AREA - GÜNCELLENDİ (Küçültüldü) */
-        .hero { 
-            height: 250px; /* 480px'den 250px'e düşürüldü */
-            background: linear-gradient(rgba(0,0,0,0.5), var(--bg)), url('tema.jpg') center/cover; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 8px solid var(--mc-dirt);
+        .hero{height:250px;background:linear-gradient(rgba(0,0,0,.5),var(--bg)),url('tema.jpg') center/cover;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:8px solid var(--mc-dirt)}
+        .hero h1{font-family:'Press Start 2P';font-size:clamp(1.2rem,5vw,2.5rem)}
+        .stats-sub{letter-spacing:10px;color:rgba(255,255,255,.2)}
+        #search{margin-top:15px;width:70%;max-width:450px;background:#000;border:3px solid var(--mc-green);
+            color:var(--neon);padding:10px;font-family:'Press Start 2P';font-size:10px}
+
+        .nav-scroll{background:#111;padding:15px;display:flex;gap:8px;overflow-x:auto;position:sticky;top:0;z-index:1000}
+        .nav-btn{background:#333;border:3px solid #000;color:#fff;padding:10px 18px;font-weight:900;cursor:pointer}
+        .nav-btn.active{background:var(--mc-green);color:#000}
+
+        .container{max-width:1300px;margin:20px auto;padding:0 20px}
+
+        .card{
+            background:var(--mc-stone);
+            border:4px solid #000;
+            display:grid;
+            grid-template-columns:50px 70px 1fr 120px 160px;
+            align-items:center;
+            padding:15px;
+            position:relative;
+            overflow:hidden;
         }
-        /* Yazı boyutları banner küçüldüğü için biraz dengelendi */
-        .hero h1 { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 5vw, 2.5rem); text-shadow: 4px 4px 0 #000; margin-bottom: 0; color: #fff; }
-        .hero .stats-sub { font-size: 16px; font-weight: 900; letter-spacing: 10px; color: rgba(255,255,255,0.2); margin-top: -5px; text-transform: uppercase; }
-        
-        /* SEARCH - GÜNCELLENDİ (Küçültüldü ve sıkılaştırıldı) */
-        #search { 
-            width: 70%; 
-            max-width: 450px; /* Genişlik kısıtlandı */
-            background: rgba(0,0,0,0.8); 
-            border: 3px solid var(--mc-green); 
-            color: var(--neon); 
-            padding: 10px; /* Padding azaltıldı */
-            margin-top: 15px; /* Margin azaltıldı */
-            font-family: 'Press Start 2P', cursive; 
-            font-size: 10px; /* Font küçültüldü */
-            outline: none; 
+
+        /* 🔥 BANNER KALİTE FIX */
+        .card-bg{
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            object-fit:contain;
+            image-rendering:auto;
+            opacity:.35;
+            background:#000;
+            pointer-events:none;
         }
 
-        /* CATEGORIES NAV */
-        .nav-scroll { background: #111; padding: 15px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; }
-        .nav-btn { background: #333; border: 3px solid #000; border-bottom: 6px solid #000; color: #fff; padding: 10px 18px; cursor: pointer; font-size: 11px; font-weight: 900; white-space: nowrap; }
-        .nav-btn.active { background: var(--mc-green); border-bottom: 3px solid #2d5116; transform: translateY(3px); }
+        .card>*{z-index:1}
+        .server-icon{width:64px;height:64px;border:3px solid #000;image-rendering:pixelated}
+        .col-players{text-align:center;font-family:'Press Start 2P';font-size:14px;color:var(--mc-green)}
+        .btn-copy{background:var(--mc-green);border:3px solid #000;padding:12px;font-weight:900;cursor:pointer}
 
-        /* GRID & CARDS */
-        .container { max-width: 1300px; margin: 20px auto; padding: 0 20px; }
-        .card { 
-            background: var(--mc-stone); border: 4px solid #000; display: grid; grid-template-columns: 50px 70px 1fr 120px 160px;
-            margin-bottom: 15px; align-items: center; padding: 15px; position: relative; overflow: hidden; box-shadow: 0 6px 0 #000;
-        }
-        .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.25; z-index: 0; pointer-events: none; }
-        .card > * { z-index: 1; }
-        .col-rank { font-family: 'Press Start 2P', cursive; font-size: 18px; color: rgba(255,255,255,0.1); }
-        .server-icon { width: 64px; height: 64px; border: 3px solid #000; background: #000; image-rendering: pixelated; }
-        .col-info h4 { margin: 0; font-size: 22px; text-shadow: 2px 2px 0 #000; display: flex; align-items: center; gap: 8px; }
-        .col-players { font-family: 'Press Start 2P', cursive; font-size: 14px; color: var(--mc-green); text-align: center; line-height: 1.5; }
-        .btn-copy { background: var(--mc-green); color: #fff; border: 3px solid #000; border-bottom: 6px solid #2d5116; padding: 12px; font-weight: 900; cursor: pointer; }
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .admin-box{background:var(--mc-stone);border:6px solid #000;padding:25px;width:100%;max-width:550px}
+        .admin-input{width:100%;padding:12px;background:#000;border:3px solid var(--mc-dirt);color:#fff;margin-bottom:10px}
+        .save-btn{width:100%;background:var(--mc-green);padding:15px;border:3px solid #000;font-weight:900;cursor:pointer}
 
-        /* PAGINATION */
-        .pagination { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
-        .pag-btn { background: #222; border: 2px solid #000; color: #fff; padding: 10px 15px; cursor: pointer; font-weight: 900; }
-        .pag-btn.active { background: var(--mc-green); color: #000; }
-
-        /* ADMIN MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 9999; align-items: center; justify-content: center; padding: 15px; }
-        .modal.active { display: flex; }
-        .admin-box { background: var(--mc-stone); border: 6px solid #000; padding: 25px; width: 100%; max-width: 550px; box-shadow: 0 10px 0 #000; max-height: 85vh; overflow-y: auto; }
-        .admin-input { width: 100%; padding: 12px; background: #000; border: 3px solid var(--mc-dirt); color: #fff; margin-bottom: 10px; font-family: inherit; }
-        .save-btn { width: 100%; background: var(--mc-green); color: #fff; padding: 15px; border: 3px solid #000; border-bottom: 6px solid #2d5116; font-weight: 900; cursor: pointer; margin-top: 10px; }
-        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #1a1a1a; margin-bottom: 5px; border: 2px solid #000; }
-
-        @media (max-width: 900px) {
-            .card { grid-template-columns: 1fr 1fr; gap: 15px; }
-            .col-info, .col-action { grid-column: 1 / 3; }
+        @media(max-width:900px){
+            .card{grid-template-columns:1fr 1fr}
         }
     </style>
 </head>
 <body>
 
-    <audio id="bgm" loop></audio>
-    <div class="music-panel"><button class="m-btn" id="mBtn" onclick="toggleMusic()">PLAY AUDIO</button></div>
+<audio id="bgm" loop></audio>
+<div class="music-panel"><button class="m-btn" onclick="toggleMusic()" id="mBtn">PLAY AUDIO</button></div>
 
-    <header class="hero" id="mainHero">
-        <h1>MC SERVERS</h1>
-        <div class="stats-sub">STATS</div>
-        <input type="text" id="search" placeholder="FIND A REALM..." onkeyup="resetAndRender()">
-    </header>
+<header class="hero" id="mainHero">
+    <h1>MC SERVERS</h1>
+    <div class="stats-sub">STATS</div>
+    <input id="search" placeholder="FIND A REALM..." onkeyup="resetAndRender()">
+</header>
 
-    <nav class="nav-scroll" id="catNav"></nav>
+<nav class="nav-scroll" id="catNav"></nav>
+<div class="container" id="grid"></div>
 
-    <div class="container" id="grid"></div>
-    <div class="pagination" id="pagin"></div>
+<div id="adminModal" class="modal">
+<div class="admin-box">
 
-    <div id="adminModal" class="modal">
-        <div class="admin-box">
-            <div id="loginArea">
-                <h2 style="text-align:center; font-family:'Press Start 2P'; font-size:12px;">ADMIN ACCESS</h2>
-                <input type="password" id="adminPass" class="admin-input" placeholder="Password">
-                <button class="save-btn" onclick="login()">LOGIN</button>
-                <button onclick="closeAdmin()" style="width:100%; background:none; border:none; color:#777; margin-top:15px; cursor:pointer;">CLOSE</button>
-            </div>
-            
-            <div id="actionArea" style="display:none;">
-                <button class="save-btn" onclick="showEditor('new')">➕ ADD NEW SERVER</button>
-                <button class="save-btn" style="background:#444;" onclick="showManage()">📝 MANAGE & EDIT</button>
-                
-                <div style="margin-top:20px; border-top:2px solid #000; padding-top:15px;">
-                    <label style="font-size:10px; color:var(--neon)">SYSTEM MEDIA SETTINGS:</label>
-                    <label class="save-btn" style="background:#222; font-size:11px; display:block; text-align:center; cursor:pointer;">
-                        🖼️ UPLOAD HERO (tema.jpg) <input type="file" id="heroUpload" hidden accept="image/*">
-                    </label>
-                    <label class="save-btn" style="background:#222; font-size:11px; display:block; text-align:center; cursor:pointer;">
-                        🎵 UPLOAD MUSIC (sarki.mp3) <input type="file" id="musicUpload" hidden accept="audio/mp3">
-                    </label>
-                </div>
-                <button onclick="closeAdmin()" style="width:100%; background:none; border:none; color:#888; margin-top:20px;">EXIT</button>
-            </div>
+<div id="loginArea">
+<input type="password" id="adminPass" class="admin-input" placeholder="Password">
+<button class="save-btn" onclick="login()">LOGIN</button>
+</div>
 
-            <div id="editorArea" style="display:none;">
-                <input type="text" id="edIp" class="admin-input" placeholder="Server IP">
-                <input type="text" id="edName" class="admin-input" placeholder="Server Name">
-                <input type="text" id="edWeb" class="admin-input" placeholder="Website URL">
-                <input type="text" id="edDate" class="admin-input" placeholder="Est. Date">
-                <input type="text" id="edFlag" class="admin-input" placeholder="Flag (tr, us, gb, de, fr, jp)">
-                <input type="text" id="edDesc" class="admin-input" placeholder="Description">
-                <select id="edCat" class="admin-input"></select>
-                <label style="font-size:10px; color:var(--neon);">Server Banner:</label>
-                <input type="file" id="edBannerFile" class="admin-input" accept="image/*">
-                <button class="save-btn" onclick="saveServer()">SAVE REALM</button>
-                <button onclick="backToActions()" style="width:100%; color:#888; border:none; background:none; margin-top:10px;">BACK</button>
-            </div>
+<div id="actionArea" style="display:none">
+<input type="file" id="edBannerFile" class="admin-input" accept="image/*,video/mp4">
+<button class="save-btn" onclick="saveServer()">SAVE</button>
+</div>
 
-            <div id="manageArea" style="display:none;">
-                <div id="manageList"></div>
-                <button onclick="backToActions()" style="width:100%; margin-top:10px;">BACK</button>
-            </div>
-        </div>
-    </div>
+</div>
+</div>
 
-    <div style="position:fixed; bottom:0; left:0; width:40px; height:40px; z-index:5000;" onclick="document.getElementById('adminModal').classList.add('active')"></div>
+<div style="position:fixed;bottom:0;left:0;width:40px;height:40px" onclick="document.getElementById('adminModal').classList.add('active')"></div>
 
-    <script>
-        const categories = ["All", "Survival", "Skyblock", "Factions", "Anarchy", "Bedwars", "Creative", "Prison", "RPG", "BoxPvP"];
-        let servers = JSON.parse(localStorage.getItem('mc_boss_v1')) || [];
-        let curCat = 'All', curPage = 1, perPage = 5, editId = null, tempBanner = "";
+<script>
+/* 🔐 ADMIN (HASH + SESSION) */
+const ADMIN_HASH="c2d9f6c3d6e8b6a5e7f2f6c7d0a0a9d2";
 
-        const catNav = document.getElementById('catNav');
-        const edCat = document.getElementById('edCat');
-        categories.forEach(c => {
-            catNav.innerHTML += `<button class="nav-btn ${c==='All'?'active':''}" onclick="setCat('${c}', this)">${c.toUpperCase()}</button>`;
-            if(c !== "All") edCat.innerHTML += `<option value="${c}">${c}</option>`;
-        });
+async function sha256(t){
+ const e=new TextEncoder().encode(t);
+ const h=await crypto.subtle.digest("SHA-256",e);
+ return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
 
-        document.getElementById('heroUpload').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                localStorage.setItem('mc_hero', reader.result);
-                document.getElementById('mainHero').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), var(--bg)), url(${reader.result})`;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        });
+async function login(){
+ const p=document.getElementById("adminPass").value;
+ if(await sha256(p)===ADMIN_HASH){
+   sessionStorage.setItem("admin","1");
+   loginArea.style.display="none";
+   actionArea.style.display="block";
+ }else alert("ACCESS DENIED");
+}
 
-        document.getElementById('musicUpload').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                localStorage.setItem('mc_music', reader.result);
-                document.getElementById('bgm').src = reader.result;
-                alert("Music updated! Press PLAY.");
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        });
+if(sessionStorage.getItem("admin")==="1"){
+ loginArea.style.display="none";
+ actionArea.style.display="block";
+}
 
-        document.getElementById('edBannerFile').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = () => { tempBanner = reader.result; };
-            reader.readAsDataURL(e.target.files[0]);
-        });
+/* SERVER DATA */
+let servers=JSON.parse(localStorage.getItem("mc_boss_v1"))||[];
+let tempBanner="";
 
-        if(localStorage.getItem('mc_hero')) document.getElementById('mainHero').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), var(--bg)), url(${localStorage.getItem('mc_hero')})`;
-        if(localStorage.getItem('mc_music')) document.getElementById('bgm').src = localStorage.getItem('mc_music');
+edBannerFile.onchange=e=>{
+ const r=new FileReader();
+ r.onload=()=>tempBanner=r.result;
+ r.readAsDataURL(e.target.files[0]);
+};
 
-        function render() {
-            const grid = document.getElementById('grid');
-            const term = document.getElementById('search').value.toLowerCase();
-            let filtered = servers.filter(s => (curCat === 'All' || s.cat === curCat) && (s.name.toLowerCase().includes(term) || s.ip.toLowerCase().includes(term)))
-                                        .sort((a,b) => b.online - a.online);
+function saveServer(){
+ servers.push({banner:tempBanner,online:0});
+ localStorage.setItem("mc_boss_v1",JSON.stringify(servers));
+ location.reload();
+}
 
-            const start = (curPage - 1) * perPage;
-            const paginated = filtered.slice(start, start + perPage);
+function render(){
+ grid.innerHTML=servers.map(s=>`
+ <div class="card">
+ ${s.banner?.startsWith("data:video")
+   ? `<video class="card-bg" autoplay muted loop playsinline src="${s.banner}"></video>`
+   : `<img class="card-bg" src="${s.banner}">`}
+ </div>`).join("");
+}
 
-            grid.innerHTML = paginated.map((s, i) => `
-                <div class="card">
-                    ${s.banner ? `<img src="${s.banner}" class="card-bg">` : ''}
-                    <div class="col-rank">#${start + i + 1}</div>
-                    <img src="https://api.mcsrvstat.us/icon/${s.ip}" class="server-icon" onerror="this.src='https://eu.mc-api.net/v3/server/favicon/${s.ip}'">
-                    <div class="col-info">
-                        <h4>${s.name} <img src="https://flagcdn.com/w20/${s.flag}.png" width="18"></h4>
-                        <span style="color:var(--mc-green); font-size:12px; font-weight:800; letter-spacing:1px;">${s.ip.toUpperCase()}</span>
-                        <div style="font-size:10px; color:#888; margin-top:5px;">📅 ${s.date} | 🌐 ${s.web} <br> ${s.desc}</div>
-                    </div>
-                    <div class="col-players">${s.online}<br><span style="font-size:8px; color:#555;">PLAYERS</span></div>
-                    <div class="col-action"><button class="btn-copy" onclick="copyIp('${s.ip}', this)">COPY IP</button></div>
-                </div>
-            `).join('');
-            renderPagination(filtered.length);
-        }
+function toggleMusic(){
+ const a=bgm;
+ a.paused?a.play():a.pause();
+ mBtn.innerText=a.paused?"PLAY":"STOP";
+}
 
-        function renderPagination(total) {
-            const pages = Math.ceil(total / perPage);
-            const pagin = document.getElementById('pagin');
-            pagin.innerHTML = '';
-            for(let i=1; i<=pages; i++) {
-                pagin.innerHTML += `<button class="pag-btn ${i===curPage?'active':''}" onclick="setPage(${i})">${i}</button>`;
-            }
-        }
-
-        async function syncAPI() {
-            await Promise.all(servers.map(async (s) => {
-                try {
-                    const res = await fetch(`https://api.mcsrvstat.us/2/${s.ip}`);
-                    const data = await res.json();
-                    s.online = data.online ? data.players.online : 0;
-                } catch { s.online = 0; }
-            }));
-            render();
-        }
-
-        function saveServer() {
-            const data = {
-                id: editId || Date.now(),
-                ip: document.getElementById('edIp').value,
-                name: document.getElementById('edName').value,
-                web: document.getElementById('edWeb').value,
-                date: document.getElementById('edDate').value,
-                flag: document.getElementById('edFlag').value || 'us',
-                desc: document.getElementById('edDesc').value,
-                cat: document.getElementById('edCat').value,
-                banner: tempBanner || (editId ? servers.find(x=>x.id===editId).banner : ""),
-                online: 0
-            };
-            if(editId) servers = servers.map(x => x.id === editId ? data : x);
-            else servers.push(data);
-            localStorage.setItem('mc_boss_v1', JSON.stringify(servers));
-            location.reload();
-        }
-
-        function showManage() {
-            document.getElementById('actionArea').style.display='none';
-            document.getElementById('manageArea').style.display='block';
-            document.getElementById('manageList').innerHTML = servers.map(s => `
-                <div class="manage-item">
-                    <span style="font-size:11px;">${s.name}</span>
-                    <div>
-                        <button onclick="showEditor(${s.id})" style="background:var(--neon); border:none; padding:5px; font-weight:900; cursor:pointer;">EDIT</button>
-                        <button onclick="delS(${s.id})" style="background:red; color:#fff; border:none; padding:5px; margin-left:5px; cursor:pointer;">DEL</button>
-                    </div>
-                </div>`).join('');
-        }
-
-        function showEditor(id) {
-            editId = id === 'new' ? null : id;
-            document.getElementById('actionArea').style.display='none';
-            document.getElementById('manageArea').style.display='none';
-            document.getElementById('editorArea').style.display='block';
-            if(id !== 'new') {
-                const s = servers.find(x => x.id === id);
-                document.getElementById('edIp').value = s.ip; document.getElementById('edName').value = s.name;
-                document.getElementById('edWeb').value = s.web; document.getElementById('edDate').value = s.date;
-                document.getElementById('edFlag').value = s.flag; document.getElementById('edDesc').value = s.desc;
-                document.getElementById('edCat').value = s.cat; tempBanner = s.banner;
-            }
-        }
-
-        function delS(id) { if(confirm('Delete server?')) { servers = servers.filter(x => x.id !== id); localStorage.setItem('mc_boss_v1', JSON.stringify(servers)); showManage(); render(); } }
-        function login() { if(document.getElementById('adminPass').value === "elif") { document.getElementById('loginArea').style.display='none'; document.getElementById('actionArea').style.display='block'; } }
-        function copyIp(ip, btn) { navigator.clipboard.writeText(ip); btn.innerText = "COPIED!"; setTimeout(() => btn.innerText = "COPY IP", 1500); }
-        function toggleMusic() { const a=document.getElementById('bgm'); a.paused?a.play():a.pause(); document.getElementById('mBtn').innerText=a.paused?"PLAY":"STOP"; }
-        function setCat(c, b) { document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); curCat = c; curPage = 1; render(); }
-        function setPage(p) { curPage = p; render(); window.scrollTo(0, 400); }
-        function resetAndRender() { curPage = 1; render(); }
-        function backToActions() { document.querySelectorAll('#editorArea, #manageArea').forEach(x=>x.style.display='none'); document.getElementById('actionArea').style.display='block'; }
-        function closeAdmin() { document.getElementById('adminModal').classList.remove('active'); }
-        window.onload = () => { render(); syncAPI(); };
-    </script>
+function resetAndRender(){render()}
+render();
+</script>
 </body>
 </html>
