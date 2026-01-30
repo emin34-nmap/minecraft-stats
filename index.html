@@ -154,6 +154,7 @@ document.getElementById("musicUpload").onchange=e=>{
   r.onload=()=>{
     localStorage.setItem("mc_music",r.result);
     document.getElementById("bgm").src=r.result;
+  a.play();
   };
   r.readAsDataURL(e.target.files[0]);
 };
