@@ -16,15 +16,29 @@
         .music-panel { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.9); padding: 10px; border-radius: 30px; border: 2px solid var(--mc-green); z-index: 2000; box-shadow: 0 0 15px var(--mc-green); }
         .m-btn { background: var(--mc-green); border: none; font-weight: 900; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 10px; color: #000; }
 
-        /* HERO AREA */
+        /* HERO AREA - GÜNCELLENDİ (Küçültüldü) */
         .hero { 
-            height: 480px; background: linear-gradient(rgba(0,0,0,0.5), var(--bg)), url('tema.jpg') center/cover; 
+            height: 250px; /* 480px'den 250px'e düşürüldü */
+            background: linear-gradient(rgba(0,0,0,0.5), var(--bg)), url('tema.jpg') center/cover; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 8px solid var(--mc-dirt);
         }
-        .hero h1 { font-family: 'Press Start 2P', cursive; font-size: clamp(1.5rem, 8vw, 4rem); text-shadow: 6px 6px 0 #000; margin-bottom: 0; color: #fff; }
-        .hero .stats-sub { font-size: 24px; font-weight: 900; letter-spacing: 15px; color: rgba(255,255,255,0.2); margin-top: -10px; text-transform: uppercase; }
+        /* Yazı boyutları banner küçüldüğü için biraz dengelendi */
+        .hero h1 { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 5vw, 2.5rem); text-shadow: 4px 4px 0 #000; margin-bottom: 0; color: #fff; }
+        .hero .stats-sub { font-size: 16px; font-weight: 900; letter-spacing: 10px; color: rgba(255,255,255,0.2); margin-top: -5px; text-transform: uppercase; }
         
-        #search { width: 85%; max-width: 600px; background: rgba(0,0,0,0.8); border: 4px solid var(--mc-green); color: var(--neon); padding: 18px; margin-top: 30px; font-family: 'Press Start 2P', cursive; font-size: 12px; outline: none; }
+        /* SEARCH - GÜNCELLENDİ (Küçültüldü ve sıkılaştırıldı) */
+        #search { 
+            width: 70%; 
+            max-width: 450px; /* Genişlik kısıtlandı */
+            background: rgba(0,0,0,0.8); 
+            border: 3px solid var(--mc-green); 
+            color: var(--neon); 
+            padding: 10px; /* Padding azaltıldı */
+            margin-top: 15px; /* Margin azaltıldı */
+            font-family: 'Press Start 2P', cursive; 
+            font-size: 10px; /* Font küçültüldü */
+            outline: none; 
+        }
 
         /* CATEGORIES NAV */
         .nav-scroll { background: #111; padding: 15px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; }
@@ -172,7 +186,7 @@
             const grid = document.getElementById('grid');
             const term = document.getElementById('search').value.toLowerCase();
             let filtered = servers.filter(s => (curCat === 'All' || s.cat === curCat) && (s.name.toLowerCase().includes(term) || s.ip.toLowerCase().includes(term)))
-                                   .sort((a,b) => b.online - a.online);
+                                        .sort((a,b) => b.online - a.online);
 
             const start = (curPage - 1) * perPage;
             const paginated = filtered.slice(start, start + perPage);
